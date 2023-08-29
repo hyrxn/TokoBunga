@@ -4,6 +4,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -15,10 +17,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Product;
@@ -42,12 +50,16 @@ public class BuyFlower extends Application implements EventHandler<ActionEvent>{
 
 	Scene scene;
 	BorderPane bp;
+	
+	Image i;
+	ImageView iv;
 
 	TableView itemTable;
 	GridPane formPane, centerBox;
 	FlowPane genderPane, btnPane;
+	HBox headerBox;
 
-	Text itemIdLbl, itemNameLbl, itemDescLbl, priceLbl, quantityLbl;
+	Text welcomeLbl, itemIdLbl, itemNameLbl, itemDescLbl, priceLbl, quantityLbl;
 	TextField itemIdField, itemNameField, itemDescField;
 	Spinner<Integer> priceSpinner, quantitySpinner;
 
@@ -73,13 +85,20 @@ public class BuyFlower extends Application implements EventHandler<ActionEvent>{
 		bp = new CustomerTemplatePage();
 		formPane = new GridPane();
 		centerBox = new GridPane();
-		scene = new Scene(bp, 1000, 600);
+		scene = new Scene(bp, 1100, 600);
+		
+		headerBox = new HBox();
+		i = new Image("file:flower-logo.png");
+		iv = new ImageView(i);
+		iv.setFitWidth(100);
+		iv.setPreserveRatio(true);
 
 		products = new Vector<Product>();
 		itemTable = new TableView();
 
 		createTable();
 
+		welcomeLbl = new Text("Welcome Customer " + LoginPage.currUser.getUsername());
 		itemIdLbl = new Text("Product ID");
 		itemNameLbl = new Text("Product name");
 		itemDescLbl = new Text("Color");
@@ -104,6 +123,9 @@ public class BuyFlower extends Application implements EventHandler<ActionEvent>{
 	}
 
 	public void build() {
+		
+		headerBox.getChildren().add(iv);
+		headerBox.getChildren().add(welcomeLbl);
 
 		formPane.add(itemIdLbl, 0, 0);
 		formPane.add(itemIdField, 1, 0);
@@ -123,17 +145,40 @@ public class BuyFlower extends Application implements EventHandler<ActionEvent>{
 		formPane.add(btnPane, 0, 5, 2, 1);
 		formPane.add(clearBtn, 0, 6, 2, 1);
 
-		centerBox.add(itemTable, 0, 0);
-		centerBox.add(formPane, 1, 0);
+		centerBox.add(itemTable, 0, 1);
+		centerBox.add(formPane, 1, 1);
 
-		bp.setCenter(centerBox);
+		bp.setCenter(headerBox);
+		bp.setBottom(centerBox);
 
 	}
 
 	public void style() {
+		bp.setPadding(new Insets(10, 50, 10, 50));
+		bp.setStyle("-fx-background-color: white");
+		
 		formPane.setHgap(10);
 		formPane.setVgap(10);
 		formPane.setPadding(new Insets(20));
+		
+		headerBox.setAlignment(Pos.CENTER);
+		welcomeLbl.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
+		centerBox.getColumnConstraints().add(new ColumnConstraints(700));
+		centerBox.getColumnConstraints().add(new ColumnConstraints(300));
+
+
+		buyBtn.setPrefSize(300, 10);
+		clearBtn.setPrefSize(300, 10);
+		
+		buyBtn.setPadding(new Insets(10));
+		clearBtn.setPadding(new Insets(10));
+		buyBtn.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+		clearBtn.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+		buyBtn.setCursor(Cursor.HAND);
+		clearBtn.setCursor(Cursor.HAND);
+		buyBtn.setStyle("-fx-background-color: Pink;-fx-effect: dropshadow(three-pass-box, #DEDEDE, 0.0, 25.0, 5.0,  5.0); -fx-border-radius: 20 20 20 20;-fx-background-radius: 20 20 20 20;");
+		clearBtn.setStyle("-fx-background-color: Green; -fx-text-fill: White;-fx-effect: dropshadow(three-pass-box, #DEDEDE, 0.0, 25.0, 5.0,  5.0); -fx-border-radius: 20 20 20 20;-fx-background-radius: 20 20 20 20;");
+		
 	}
 
 	public void addAction() {
